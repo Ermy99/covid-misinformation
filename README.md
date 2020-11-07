@@ -1,4 +1,4 @@
-# Recognizing Misinformation
+\# Recognizing Misinformation
 
 This project aims to analyze current models and technologies for recognizing and flagging misinformation on the internet, and hopes to improve these models and find patterns that people could use to make more informed decisions while reading news that could potentially be misinformation.
 
@@ -53,7 +53,7 @@ This dataset is a collections of sentences so it does not contain any outliers a
 
 ## Feature Engineering
 
-In order to apply any machine learning methods, we extracted numerical data by engineering features based on our intution on potential signals within the text. These featuers will be normalized to text length where applicable.
+In order to apply any machine learning methods, we extracted numerical data by engineering features based on existing literature on misinformation in news, as well as our intution on potential signals within the text. These features will be normalized to text length where applicable.
 
 ### TF-IDF
 
@@ -69,7 +69,7 @@ negations,
 capital letters,
 type-token ratio,
 average word length,
-quotes
+and number of quotes
 
 We also extracted other ad hoc features such as sentiment, polarity, subjectivity, and mispellings
 
@@ -101,7 +101,7 @@ After obtaining two labelled clusters from each of the three clustering algorith
 
 ![](images/fmeasure.png)
 
-F1 score, otherwise known as F-measure, is the average between precision and recall, which is why it was chosen as measurement of performance. In this case, precision is the number of correctly identified true news articles, divided by the number of articles classified as true. On the other hand, recall is the number of correctly identified true news articles, divided by the number of true articles. 
+F1 score, otherwise known as F-measure, is the average between precision and recall, which is why it was chosen as measurement of performance. In this case, precision is the number of correctly identified true news articles, divided by the number of articles classified as true. On the other hand, recall is the number of correctly identified true news articles, divided by the number of true articles. GMM and K-Means both had an F-Measure well above 50% (85% and 65%), and this can serve as an indication that there is some feature(s) in our dataset that can used to differentiate between false and true news articles.
 
 ## Conclusion
 
