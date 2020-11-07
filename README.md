@@ -45,12 +45,17 @@ Wang, Yuxi, McKee, Martin, Torbica, Aleksandra, & Stuckler, David. (2019). Syste
 
 The columns of our dataset are source, title text, body text, and label.
 
-Some rows had **NaN** values for either the title or body. We replaced these with empty strings.
+Some rows had ``NaN`` values for either the title or body. We replaced these with empty strings. We also grouped sources as "Facebook/Twitter/Youtube", "Medical", "Government", "Education", "News" and "Others" in order to understand the sentence construction in context of the sources (and their group of readers) and how it affects our clustering algorithm. We also cleaned the data to convert the labels column into a boolean "true" and "false" one.
 
+Recognizing misinformation is a classification problem (and not regression) and in our dataset of 1164 columns, 584 (or 50.17%) were articles that were true and the rest (49.8%) were false. All of the articles were related to coronavirus, and the link to the dataset is [here](https://raw.githubusercontent.com/susanli2016/NLP-with-Python/master/data/corona_fake.csv).
+
+This dataset is a collections of sentences so it does not contain any outliers and includes a diverse set of sources. Our feature engineering did lead to creation of some outliers when it came to misspellings and TF-IDF (discussed below) values but we normalized all of the values before further analysis and also computed the PCA to highlight the important features.
 
 ## Feature Engineering
 
-In order to apply any machine learning methods, we extracted numerical data by engineering features based on our intution on potential signals within the text. These featuers will be normalized to text length where applicable.
+In order to apply any machine learning methods, we extracted numerical data by engineering features based on existing literature on misinformation in news, as well as our intution on potential signals within the text. These features will be normalized to text length where applicable. We also generated a heatmap of the corelation matrix to allow us to see which features might be useful for clustering.
+
+![](images/cor.png)
 
 ### TF-IDF
 
@@ -58,17 +63,20 @@ Text frequency-inverse document frequency measures the importance of a word to a
 
 ### Stylistic and Vocabulary Patterns
 
-Studies have shown fake news may use simpler, repetitive content in the text body. We extracted the following vocabulary and style statistics:
+Studies have shown fake news may use simpler, repetitive content in the text body, and more proper nouns and verbs in their titles. Horne & Adali's study on fake news uncovers these characteristics, and many others on which we based our feature engineering on (2017).
+
+We extracted the following vocabulary and style statistics:
+Type-Token Ratio,
+Flesh-Kincaid Grade Readability Index,
+Gunning Fog Grade Readability Index,
 stop-words,
 pronouns, 
 adjectives,
 negations,
 capital letters,
-type-token ratio,
-average word length,
-quotes
+average word length, number of quotes, etc.
 
-We also extracted other ad hoc features such as sentiment, polarity, subjectivity, and mispellings
+We also extracted other ad hoc features such as sentiment (which is comprised of polarity and subjectivity), and mispellings.
 
 ### Source
 
@@ -76,13 +84,21 @@ The reliability of the information within an article may be highly correlated to
 
 ## Clustering
 
-We normalized our features and ran DBScan, K-means and GMM on the all of the features. DBScan returned ten clusters instead of two because we couldn't manually choose the number of clusters in DBScan. Although this wasn't helpful for our final goal, it gave us important insight into the fact that even within the same label, our datapoints have a lot of variety. The graphs are plotted against two features of sentiment analysis.
+We normalized our features and ran DBScan, K-means and GMM on the all of the features. The graphs are plotted against two features of sentiment analysis.
+
+DBScan clusters data based on their distances, and this distance is calculated using the vectors (of features) that we generated. We normalized all of our features so that none of them dominates over the others. We used this clustering as it clusters based on "closeness" to neighboring vectors and if DBScan returns two clusters with high purity then this means that true and misleading articles are distinct. DBScan returned three clusters instead of two because we couldn't manually choose the number of clusters, but it gave us important insight into the fact that even within the same label, our datapoints have a lot of variety.
 
 ![](images/dbscan.png)
 
+K-means clusters data using a randomly (or for sci-kit learn it tries to optimize convergence) and then clusters vectors close to that center into one cluster. We used two number of clusters and the F-score of K-mean was significantly higher than DBScan, and we discuss more about the implications of this in the section below. The results we got showed that it is possible that a misleading article might closely resemble true ones and vice versa.
+
 ![](images/kmeans.png)
 
+GMM uses expectation-maximization to cluster data. We used this method as DBScan and K-means showed the weakness in using just distance to cluster our data, and the results we got were better than K-means with a higher F-score (discussed in the section below). This means that distance is not the right way to approach the problem of clustering misinformation, and we should rather focus on algorithms that use EM or other probabilitistic methods.
+
 ![](images/gmm.png)
+
+When we looked at how all three of our clustring algorithms were clustering data when it came to sources, we found that it often clustered false news articles and the true articles from government and educational sources together, and this means that false news articles often portray themselves as being official or gain credibility by using a writing style similar to educational sources. 
 
 ### F-measure:
 
@@ -90,10 +106,17 @@ After obtaining two labelled clusters from each of the three clustering algorith
 
 ![](images/fmeasure.png)
 
+F1 score, otherwise known as F-measure, is the average between precision and recall, which is why it was chosen as measurement of performance. In this case, precision is the number of correctly identified true news articles, divided by the number of articles classified as true. On the other hand, recall is the number of correctly identified true news articles, divided by the number of true articles. GMM and K-Means both had an F-Measure well above 50% (85% and 65%), and this can serve as an indication that there is some feature(s) in our dataset that can used to differentiate between false and true news articles.
+
 ## Conclusion
 
 After running the clustering algorithms as described above, we realized that our data isn't very suitable to unsupervised laerning. Unsupervised learning does not learn from "experience" and that is an important factor in our data because of how subjective the labels can be. Supervised learning is general is known to incraese accuracy, F-scores, etc., and improving the F-score is one of our main goals right now.
 
+## References
+
+Horne, B., & Adali, S. (2017). This Just In: Fake News Packs a Lot in Title, Uses Simpler, Repetitive Content in Text Body, More Similar to Satire than Real News. ArXiv, abs/1703.09398.
+
+Eldén, Lars. Matrix methods in data mining and pattern recognition. Society for Industrial and Applied Mathematics, 2007
 
 ---
 
