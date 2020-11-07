@@ -4,6 +4,7 @@ This project aims to analyze current models and technologies for recognizing and
 
 ![](images/touchpoint1.png)
 
+
 ## Introduction
 
 While the spread of misinformation is not a new concept,the topic has recently garnered attention due to its relevancy in the age of the Internet and social media. The increasingly concerning issue has been the subject of studies, especially in relation to vaccination, the Zika virus, as well as Ebola (Wang et al., 2019). More recently, most people in the world have been exposed to misleading news articles about COVID-19 in the past few months. This causes fear, uncertainty, and doubt that has had negative effects such as loss of life, economic instability, and political turmoil. To address this problem, we are designing a machine mearning model that can identify misinformation and warn the reader when they encounter a headline or article that may contain misinformation. While we are categorically focusing on coronavirus news right now, this model may be generalized to detect misleading and false news about other topics as well.
@@ -46,7 +47,7 @@ The columns of our dataset are source, title text, body text, and label.
 
 Some rows had ``NaN`` values for either the title or body. We replaced these with empty strings. We also grouped sources as "Facebook/Twitter/Youtube", "Medical", "Government", "Education", "News" and "Others" in order to understand the sentence construction in context of the sources (and their group of readers) and how it affects our clustering algorithms. We also cleaned the data to convert the labels column into a boolean "true" and "false" one.
 
-Recognizing misinformation is a classification problem (and not regression) and in our dataset of 1164 columns, and our class distribution consists of 584 (or 50.17%) articles that were labeled true and the rest (49.8%) were false. All of the articles were related to coronavirus, and the link to the dataset is [here](https://raw.githubusercontent.com/susanli2016/NLP-with-Python/master/data/corona_fake.csv).
+Recognizing misinformation is a classification problem (and not regression) and our dataset consists of 1164 columns (or data points), and our class distribution consists of 584 (or 50.17%) articles that were labeled true and the rest (49.8%) were false. All of the articles were related to coronavirus, and the link to the dataset is [here](https://raw.githubusercontent.com/susanli2016/NLP-with-Python/master/data/corona_fake.csv).
 
 This dataset is a collections of sentences so it does not contain any outliers and includes a diverse set of sources. Our feature engineering did lead to creation of some outliers when it came to misspellings and TF-IDF (discussed below) values, but we normalized all of the values before further analysis and also computed the PCA to highlight the important features.
 
