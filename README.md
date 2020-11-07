@@ -1,4 +1,4 @@
-\# Recognizing Misinformation
+# Recognizing Misinformation
 
 This project aims to analyze current models and technologies for recognizing and flagging misinformation on the internet, and hopes to improve these models and find patterns that people could use to make more informed decisions while reading news that could potentially be misinformation.
 
@@ -53,7 +53,9 @@ This dataset is a collections of sentences so it does not contain any outliers a
 
 ## Feature Engineering
 
-In order to apply any machine learning methods, we extracted numerical data by engineering features based on existing literature on misinformation in news, as well as our intution on potential signals within the text. These features will be normalized to text length where applicable.
+In order to apply any machine learning methods, we extracted numerical data by engineering features based on existing literature on misinformation in news, as well as our intution on potential signals within the text. These features will be normalized to text length where applicable. We also generated a heatmap of the corelation matrix to allow us to see which features might be useful for clustering.
+
+![](images/cor.png)
 
 ### TF-IDF
 
@@ -61,17 +63,20 @@ Text frequency-inverse document frequency measures the importance of a word to a
 
 ### Stylistic and Vocabulary Patterns
 
-Studies have shown fake news may use simpler, repetitive content in the text body. We extracted the following vocabulary and style statistics:
+Studies have shown fake news may use simpler, repetitive content in the text body, and more proper nouns and verbs in their titles. Horne & Adali's study on fake news uncovers these characteristics, and many others on which we based our feature engineering on (2017).
+
+We extracted the following vocabulary and style statistics:
+Type-Token Ratio,
+Flesh-Kincaid Grade Readability Index,
+Gunning Fog Grade Readability Index,
 stop-words,
 pronouns, 
 adjectives,
 negations,
 capital letters,
-type-token ratio,
-average word length,
-and number of quotes
+average word length, number of quotes, etc.
 
-We also extracted other ad hoc features such as sentiment, polarity, subjectivity, and mispellings
+We also extracted other ad hoc features such as sentiment (which is comprised of polarity and subjectivity), and mispellings.
 
 ### Source
 
@@ -109,7 +114,7 @@ After running the clustering algorithms as described above, we realized that our
 
 ## References
 
-Horne, Benjamin D., and Sibel Adali. "This just in: Fake news packs a lot in title, uses simpler, repetitive content in text body, more similar to satire than real news." arXiv preprint arXiv:1703.09398 (2017).
+Horne, B., & Adali, S. (2017). This Just In: Fake News Packs a Lot in Title, Uses Simpler, Repetitive Content in Text Body, More Similar to Satire than Real News. ArXiv, abs/1703.09398.
 
 Eldén, Lars. Matrix methods in data mining and pattern recognition. Society for Industrial and Applied Mathematics, 2007
 
