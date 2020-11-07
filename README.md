@@ -45,15 +45,15 @@ Wang, Yuxi, McKee, Martin, Torbica, Aleksandra, & Stuckler, David. (2019). Syste
 
 The columns of our dataset are source, title text, body text, and label.
 
-Some rows had ``NaN`` values for either the title or body. We replaced these with empty strings. We also grouped sources as "Facebook/Twitter/Youtube", "Medical", "Government", "Education", "News" and "Others" in order to understand the sentence construction in context of the sources (and their group of readers) and how it affects our clustering algorithm. We also cleaned the data to convert the labels column into a boolean "true" and "false" one.
+Some rows had ``NaN`` values for either the title or body. We replaced these with empty strings. We also grouped sources as "Facebook/Twitter/Youtube", "Medical", "Government", "Education", "News" and "Others" in order to understand the sentence construction in context of the sources (and their group of readers) and how it affects our clustering algorithms. We also cleaned the data to convert the labels column into a boolean "true" and "false" one.
 
 Recognizing misinformation is a classification problem (and not regression) and in our dataset of 1164 columns, 584 (or 50.17%) were articles that were true and the rest (49.8%) were false. All of the articles were related to coronavirus, and the link to the dataset is [here](https://raw.githubusercontent.com/susanli2016/NLP-with-Python/master/data/corona_fake.csv).
 
-This dataset is a collections of sentences so it does not contain any outliers and includes a diverse set of sources. Our feature engineering did lead to creation of some outliers when it came to misspellings and TF-IDF (discussed below) values but we normalized all of the values before further analysis and also computed the PCA to highlight the important features.
+This dataset is a collections of sentences so it does not contain any outliers and includes a diverse set of sources. Our feature engineering did lead to creation of some outliers when it came to misspellings and TF-IDF (discussed below) values, but we normalized all of the values before further analysis and also computed the PCA to highlight the important features.
 
 ## Feature Engineering
 
-In order to apply any machine learning methods, we extracted numerical data by engineering features based on existing literature on misinformation in news, as well as our intution on potential signals within the text. These features will be normalized to text length where applicable. We also generated a heatmap of the corelation matrix to allow us to see which features might be useful for clustering.
+In order to apply any machine learning methods, we extracted numerical data by engineering features based on existing literature on misinformation in news, as well as our intution on potential signals within the text. These features will be normalized to text length where applicable. We also generated a heatmap of the correlation matrix to allow us to see which features (we reduced the number of features to 88 important ones for generating this graph) might be useful for clustering.
 
 ![](images/cor.png)
 
@@ -63,7 +63,7 @@ Text frequency-inverse document frequency measures the importance of a word to a
 
 ### Stylistic and Vocabulary Patterns
 
-Studies have shown fake news may use simpler, repetitive content in the text body, and more proper nouns and verbs in their titles. Horne & Adali's study on fake news uncovers these characteristics, and many others on which we based our feature engineering on (2017).
+Studies have shown fake news may use simpler, repetitive content in the text body, and more proper nouns and verbs in their titles. Horne & Adali's study on fake news uncovers these characteristics, and many others on which we based our feature engineering (2017).
 
 We extracted the following vocabulary and style statistics:
 Type-Token Ratio,
@@ -80,21 +80,32 @@ We also extracted other ad hoc features such as sentiment (which is comprised of
 
 ### Source
 
-The reliability of the information within an article may be highly correlated to the source where the article was found. We labled articles by source with one hot encoding into categories like government, social media, academia, mainstream news, or other.
+The reliability of the information within an article may be highly correlated to the source where the article was found. We labelled articles by source with one hot encoding into categories like government, social media, academia, mainstream news, or other.
+
+## Dimensionality Reduction
+TFIDF returns 76 features. Additional feature engineering provided 12 features. We used PCA to experiment with the effects of dimensionality reduction.
+
+First we used PCA to recover 99% of varience on all the normalized data. This only reduced the dimensions to 82 from a feature count of 88 which shows that most of our features are not extraneous.
+
+![](images/percent99.png)
+
+We then also used PCA to produce 20 components. The first principal compoent is dominant due to one of the non tfidf features. This was conlcuded through comparing PCA of just.
+
+![](images/20comp.png)
 
 ## Clustering
 
-We normalized our features and ran DBScan, K-means and GMM on the all of the features. The graphs are plotted against two features of sentiment analysis.
+We normalized our features and ran DBScan, K-means and GMM on the all of the features. The graphs are plotted against the two features of sentiment analysis, polarity and subjectivity. Polarity is a value between 0 and 1 that indicates whether the text is negative or positive, and subjectivity is a value between 0 and 1 that indicates whether the text is a fact or personal opinion.
 
-DBScan clusters data based on their distances, and this distance is calculated using the vectors (of features) that we generated. We normalized all of our features so that none of them dominates over the others. We used this clustering as it clusters based on "closeness" to neighboring vectors and if DBScan returns two clusters with high purity then this means that true and misleading articles are distinct. DBScan returned three clusters instead of two because we couldn't manually choose the number of clusters, but it gave us important insight into the fact that even within the same label, our datapoints have a lot of variety.
+DBScan clusters data based on their distances, and this distance is calculated using the vectors (of features) that we generated. We normalized all of our features so that none of them dominates over the others. We used this algorithm as it clusters based on "closeness" to neighboring vectors, and if DBScan returns two clusters with high purity then this means that true and misleading articles are distinct. DBScan returned three clusters instead of two because we couldn't manually choose the number of clusters, but it gave us important insight into the fact that even within the same label, our datapoints have a lot of variety.
 
 ![](images/dbscan.png)
 
-K-means clusters data using a randomly (or for sci-kit learn it tries to optimize convergence) and then clusters vectors close to that center into one cluster. We used two number of clusters and the F-score of K-mean was significantly higher than DBScan, and we discuss more about the implications of this in the section below. The results we got showed that it is possible that a misleading article might closely resemble true ones and vice versa.
+K-means clusters data using randomly selected centroids (or for sci-kit learn it tries to optimize convergence), and then clusters vectors close to that center into one cluster. We used two number of clusters, and the F1 score of K-mean was significantly higher than DBScan. The results showed that it is possible that a misleading article might closely resemble true ones, and vice versa.
 
 ![](images/kmeans.png)
 
-GMM uses expectation-maximization to cluster data. We used this method as DBScan and K-means showed the weakness in using just distance to cluster our data, and the results we got were better than K-means with a higher F-score (discussed in the section below). This means that distance is not the right way to approach the problem of clustering misinformation, and we should rather focus on algorithms that use EM or other probabilitistic methods.
+GMM uses expectation-maximization to cluster data. We used this method as DBScan and K-means showed the weakness in using just distance to cluster our data, and the results we got were better than K-means with a higher F-score. This means that distance is not the right way to approach the problem of clustering misinformation, and we should rather focus on algorithms that use EM or other probabilitistic methods.
 
 ![](images/gmm.png)
 
@@ -111,6 +122,9 @@ F1 score, otherwise known as F-measure, is the average between precision and rec
 ## Conclusion
 
 After running the clustering algorithms as described above, we realized that our data isn't very suitable to unsupervised laerning. Unsupervised learning does not learn from "experience" and that is an important factor in our data because of how subjective the labels can be. Supervised learning is general is known to incraese accuracy, F-scores, etc., and improving the F-score is one of our main goals right now.
+
+### Code
+Our code is in the Google Colab notebook in the Github Repo.
 
 ## References
 
