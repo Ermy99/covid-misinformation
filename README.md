@@ -1,6 +1,6 @@
 # Recognizing Misinformation
 
-This project aims to analyze current models and technologies for recognizing and flagging misinformation on the internet, and hopes to improve these models and find patterns that people could use to make more informed decisions while reading news that could potentially be misinformation.
+This project aims to analyze current models and technologies for recognizing and flagging misinformation on the internet, and hopes to improve these models and find patterns that people could use to make more informed decisions while reading news that could potentially be misinformation. Below are the single slides from Touchpoints.
 
 ![](images/touchpoint1.png)
 
@@ -62,6 +62,19 @@ We also extracted other ad hoc features such as sentiment (which is comprised of
 
 The reliability of the information within an article may be highly correlated to the source where the article was found. We labelled articles by source with one hot encoding into categories like government, social media, academia, mainstream news, or other.
 
+### Feature Selection
+
+As an initial step to reduce dimensionality after feature engineering, we utilized the filter method with correlation to eliminate irrelevant features. The following is the correlation matrix of the stylistic patterns features, with an additional column representing the correlation of each feature to the label. Using a cut-off of 0.5 for the p-value, we discovered that the frequency of proper nouns and capital letters were corrlated (p = 0.71), and we eliminated the proper nouns feature because it was less correlated with the label (p = 3.9e-38 vs. p = 5.4e-0.7).
+
+![](images/feature1.png)
+![](images/feature2.png)
+
+This is the correlation matrix of the TFIDF features, with an additional column representing the correlation of each feature to the label. The feature for the word "covid" was highly correlated with the one for "19" (p = 0.99), and we eliminated 'tfidf_19'.
+
+![](images/feature3.png)
+![](images/feature4.png)
+
+
 ## Unsupervised Learning
 
 ### Dimensionality Reduction
@@ -99,26 +112,53 @@ After obtaining two labelled clusters from each of the three clustering algorith
 
 ![](images/fmeasure.png)
 
-F1 score, otherwise known as F-measure, is the average between precision and recall, which is why it was chosen as measurement of performance. In this case, precision is the number of correctly identified true news articles, divided by the number of articles classified as true. On the other hand, recall is the number of correctly identified true news articles, divided by the number of true articles. GMM and K-Means both had an F-Measure well above 50% (85% and 65%), and this can serve as an indication that there is some feature(s) in our dataset that can used to differentiate between false and true news articles.
-
-### Random Forest:
-To improve on the performance of decision trees, we turned to a random forest classifier. We scanned through a range for the number of trees and max depth to determine the optimal hyperparameters. Training and testing data was split randomly with 33% of the data set aside for the test phase. The average accuracy of ten runs per hyperparameter pair was recorded.
-
-![](images/random_forest.PNG)
-
-An optimal accuracy of 86.83% was reached with a max depth of 10 and 1500 estimators. The limitation of the random forest classifier was the time to train and test many trials with many estimators. We saw minor increase in performance with more estimators but the amount of increase did not warrant the increasingly longer time it took to train. 
-
-
+F1 score, otherwise known as F-measure, is the average between precision and recall, which is why it was chosen as measurement of performance. In this case, precision is the number of correctly identified true news articles, divided by the number of articles classified as true. On the other hand, recall is the number of correctly identified true news articles, divided by the number of true articles. GMM and K-Means both had an F-Measure well above 0.50 (0.82 and 0.65), and this can serve as an indication that there is some feature(s) in our dataset that can used to differentiate between false and true news articles.
 
 ### Conclusion
 
-After running the clustering algorithms as described above, we realized that our data isn't very suitable to unsupervised laerning. Unsupervised learning does not learn from "experience" and that is an important factor in our data because of how subjective the labels can be. Supervised learning is general is known to incraese accuracy, F-scores, etc., and improving the F-score is one of our main goals right now.
+After running the clustering algorithms as described above, we realized that our data isn't very suitable to unsupervised learning as it does not learn from "experience" and that is an important factor in our data because of how subjective the labels can be. Supervised learning is general is known to incraese accuracy, F-scores, etc., and improving the F-score is one of our main goals right now.
+
+## Supervised Learning
+
+### Decision Tree
+We used Decision Tree on a non-PCA dataset to retain the order of column labels in order to understand what feature(s) are the most important ones in differentiating between true and misleading articles. The first step was calculating an optimal depth, which came out to 8, and the plot for accuracy v. depth is below. 
+
+![](images/decisiontree.png)
+
+Then we visualized the decision tree with depth 8 and we found out that proper nouns, adjective and misspellings are more frequent in misleading articles.
+
+![](images/decisiontreeplot.png)
+
+### Random Forest
+To improve on the performance of decision trees, we turned to a random forest classifier. We scanned through a range for the number of trees and max depth to determine the optimal hyperparameters. Training and testing data was split randomly with 33% of the data set aside for the test phase. The average accuracy of ten runs per hyperparameter pair was recorded.
+
+![](images/random_forest.png)
+
+An optimal accuracy of 86.83% was reached with a max depth of 10 and 1500 estimators. The limitation of the random forest classifier was the time to train and test many trials with many estimators. We saw minor increase in performance with more estimators but the amount of increase did not warrant the increasingly longer time it took to train. 
+
+### Multi-Layer Perceptron
+
+We used Sci-kit Learn's multi-layer perceptron which is a two-layer neural network that uses backpropagation. Since our dataset wasn't very big and was somewhat complicated, a two-layered neural network did not give us good results. The model gave an accuracy of 52% on the training data, so we decided to not move forward with this model.
+
+### SVM
+
+The accuracy, precision, F-scores, and recall, for each label, and the dataset as a whole were around 85% each. We tried different kernel functions such as sigmoid, polynomial, radial basis functions, linear, etc. and we got the best results with a linear kernel, so we stuck with that. The plot shows the separation of labels for different SVM kernels with two of the most important features.
+
+![](images/svm.jpg)
 
 ## Results
-The results of this project will be a set of supervised and unsupervised models that can determing the presence of misinformation. The degree of accuracy of these models will be analyzed in order to determine the method that was most effective. We will be able to compare our results to the performance of existing implementation of systems that have the same goal.
+The results of this project are a set of supervised and unsupervised models that can determine the presence of misinformation. The degree of accuracy of these models was analyzed in order to determine the method that was most effective. Among unsupervized learning, GMM gave us the results with an F-score of 0.82, while all other models had their metrics around 0.5 or lower. However, on average, the performance of clustering algorithsm was poor as mentioned before, which made us realize that our misinformation identification problem is much better suited to supervised learning. Our supervised learning models gave much more promsing results.
+
+![](images/fmeasureall.png)
+![](images/accuracy.png)
+![](images/precision.png)
+![](images/recall.png)
+
+Perceptron achieved the highest recall but had very low accuracy and F1-score becuase it was over-predicting articles as true. Ignoring this outlier, the best pperforming model was ___. 
+
 
 ## Discussion
-The ideal outcome of this project is a model that can identify the presence of misinformation in a text with high accuracy. This capability would allow for large platforms to minimize the exposure of misinformation to their users. If high accuracy is not achieved there are still benefits from the automated nature of a machine learning model. This work will still be able to  reduce the workload of manual review. Future work may include improving the accuracy of our models, finding better methods for obtaining data, or changing the focus to augmenting human review instead of replacement. 
+The outcome of this project is a model that can identify the presence of misinformation in a text with fairly high accuracy. This capability would allow for large platforms to minimize the exposure of misinformation to their users. Even if the prediction isn't perfect, there are still benefits from the automated nature of a machine learning model. This work will still be able to  reduce the workload of manual review. Future work may include improving the accuracy of our models, finding better methods for obtaining data, or changing the focus to augmenting human review instead of replacement. 
 
 ## References 
 
