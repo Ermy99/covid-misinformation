@@ -151,11 +151,18 @@ The accuracy, precision, F-scores, and recall, for each label, and the dataset a
 The results of this project are a set of supervised and unsupervised models that can determine the presence of misinformation. The degree of accuracy of these models was analyzed in order to determine the method that was most effective. Among unsupervized learning, GMM gave us the results with an F-score of 0.82, while all other models had their metrics around 0.5 or lower. However, on average, the performance of clustering algorithsm was poor as mentioned before, which made us realize that our misinformation identification problem is much better suited to supervised learning. Our supervised learning models gave much more promsing results.
 
 ![](images/fmeasureall.png)
+
+Now consider the the plots of accuracy, recall and average precision for supervised learning,
+
 ![](images/accuracy.png)
-![](images/precision.png)
+
 ![](images/recall.png)
 
-Perceptron achieved the highest recall but had very low accuracy and F1-score becuase it was over-predicting articles as true. Ignoring this outlier, the best pperforming model was ___. 
+Perceptron achieved the highest recall but had very low accuracy and F1-score becuase it was over-predicting articles as true. 
+
+![](images/precision.png)
+
+Ignoring this outlier, the best performing model was Random Forest because it had the best combination F-measure and accuracy.
 
 
 ## Discussion
@@ -181,4 +188,5 @@ Our code is in the Google Colab notebook in the Github Repo.
 CS 4641 Group Project by Akanksha Jhunjhunwala, Albert Chen, Ermy Izihirwe and Sudhanshu Agarwal
 
 ---
+
 
