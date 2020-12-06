@@ -133,7 +133,7 @@ Then we visualized the decision tree with depth 8 and we found out that proper n
 ### Random Forest
 To improve on the performance of decision trees, we turned to a random forest classifier. We scanned through a range for the number of trees and max depth to determine the optimal hyperparameters. Training and testing data was split randomly with 33% of the data set aside for the test phase. The average accuracy of ten runs per hyperparameter pair was recorded.
 
-![](images/random_forest.png)
+![](images/random_forest.PNG)
 
 An optimal accuracy of 86.83% was reached with a max depth of 10 and 1500 estimators. The limitation of the random forest classifier was the time to train and test many trials with many estimators. We saw minor increase in performance with more estimators but the amount of increase did not warrant the increasingly longer time it took to train. 
 
