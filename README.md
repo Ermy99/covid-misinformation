@@ -162,7 +162,7 @@ Perceptron achieved the highest recall but had very low accuracy and F1-score be
 
 ![](images/precision.png)
 
-Ignoring this outlier, the best performing model was Random Forest because it had the best combination F-measure and accuracy.
+Ignoring this outlier, the best performing model was Random Forest because it had the best combination of F-measure and accuracy.
 
 
 ## Discussion
