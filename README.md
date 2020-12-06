@@ -10,7 +10,7 @@ This project aims to analyze current models and technologies for recognizing and
 
 ## Introduction
 
-While the spread of misinformation is not a new concept,the topic has recently garnered attention due to its relevancy in the age of the Internet and social media. The increasingly concerning issue has been the subject of studies, especially in relation to vaccination, the Zika virus, as well as Ebola (Wang et al., 2019). More recently, most people in the world have been exposed to misleading news articles about COVID-19 in the past few months. This causes fear, uncertainty, and doubt that has had negative effects such as loss of life, economic instability, and political turmoil. To address this problem, we are designing a machine mearning model that can identify misinformation and warn the reader when they encounter a headline or article that may contain misinformation. While we are categorically focusing on coronavirus news right now, this model may be generalized to detect misleading and false news about other topics as well.
+While the spread of misinformation is not a new concept, the topic has recently garnered attention due to its relevance in the age of the Internet and social media. The increasingly concerning issue has been the subject of studies, especially in relation to vaccination, the Zika virus, as well as Ebola (Wang et al., 2019). More recently, most people in the world have been exposed to misleading news articles about COVID-19 in the past few months. This causes fear, uncertainty, and doubt that has had negative effects such as loss of life, economic instability, and political turmoil. To address this problem, we are designing a machine mearning model that can identify misinformation and warn the reader when they encounter a headline or article that may contain misinformation. While we are categorically focusing on coronavirus news right now, this model may be generalized to detect misleading and false news about other topics as well.
 
 False or misleading news headlines can sometimes be characterized by errors in punctuation and spelling, use of exclamation marks, or use of all caps text. The credibility of verious news sources, tweets, whatsapp forwards, facebook posts, and online news websites can also be used as factors in determinging the presence of misinformation. We trained our models to identify these patterns that may correlate with misleading headlines or text.
 
@@ -133,7 +133,7 @@ Then we visualized the decision tree with depth 8 and we found out that proper n
 ### Random Forest
 To improve on the performance of decision trees, we turned to a random forest classifier. We scanned through a range for the number of trees and max depth to determine the optimal hyperparameters. Training and testing data was split randomly with 33% of the data set aside for the test phase. The average accuracy of ten runs per hyperparameter pair was recorded.
 
-![](images/random_forest.PNG)
+![](images/random_forest.png)
 
 An optimal accuracy of 86.83% was reached with a max depth of 10 and 1500 estimators. The limitation of the random forest classifier was the time to train and test many trials with many estimators. We saw minor increase in performance with more estimators but the amount of increase did not warrant the increasingly longer time it took to train. 
 
@@ -148,7 +148,7 @@ The accuracy, precision, F-scores, and recall, for each label, and the dataset a
 ![](images/svm.jpg)
 
 ## Results
-The results of this project are a set of supervised and unsupervised models that can determine the presence of misinformation. The degree of accuracy of these models was analyzed in order to determine the method that was most effective. Among unsupervized learning, GMM gave us the results with an F-score of 0.82, while all other models had their metrics around 0.5 or lower. However, on average, the performance of clustering algorithsm was poor as mentioned before, which made us realize that our misinformation identification problem is much better suited to supervised learning. Our supervised learning models gave much more promsing results.
+The results of this project are a set of supervised and unsupervised models that can determine the presence of misinformation. The degree of accuracy of these models was analyzed in order to determine the method that was most effective. Among unsupervized learning, GMM gave us the results with an F-score of 0.82, while all other models had their metrics around 0.7 or lower. However, on average, the performance of clustering algorithms was poor as mentioned before, which made us realize that our misinformation identification problem is much better suited to supervised learning. Our supervised learning models gave much more promsing results.
 
 ![](images/fmeasureall.png)
 
