@@ -123,11 +123,12 @@ After running the clustering algorithms as described above, we realized that our
 ### Decision Tree
 We used Decision Tree on a non-PCA dataset to retain the order of column labels in order to understand what feature(s) are the most important ones in differentiating between true and misleading articles. The first step was calculating an optimal depth, which came out to 8, and the plot for accuracy v. depth is below. 
 
-![](images/decisiontree.png)
+![](images/decisiontreeplot.png)
 
 Then we visualized the decision tree with depth 8 and we found out that proper nouns, adjective and misspellings are more frequent in misleading articles.
 
-![](images/decisiontreeplot.png)
+![](images/decisiontree.png)
+
 
 ### Random Forest
 To improve on the performance of decision trees, we turned to a random forest classifier. We scanned through a range for the number of trees and max depth to determine the optimal hyperparameters. Training and testing data was split randomly with 33% of the data set aside for the test phase. The average accuracy of ten runs per hyperparameter pair was recorded.
